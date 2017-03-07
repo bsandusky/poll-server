@@ -1,0 +1,19 @@
+{
+  "name": "poll-server",
+  "version": "1.0.0",
+  "description": "API server for poll questions",
+  "main": "server.js",
+  "scripts": {
+    "start": "./node_modules/nodemon/bin/nodemon.js server.js -L",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "bsandusky",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^16.1.0",
+    "mongoose": "^4.8.6"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
