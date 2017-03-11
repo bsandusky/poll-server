@@ -3,7 +3,7 @@ version: '2'
 services:
 
   server:
-    image: bsandusky/poll-server:0.1
+    image: bsandusky/poll-server:0.2
     container_name: server
     environment:
       - MONGO_URI=mongodb://mongodb/polls
@@ -11,14 +11,8 @@ services:
       - database
     ports:
       - "8000:8000"
-    volumes:
-      - .:/usr/src/app
 
   database:
     image: mongo
     container_name: mongodb
     command: --smallfiles
-    # ports:
-    #   - "27017:27017"
-    # volumes:
-    #   - ./data:/var/lib/mongodb/data
