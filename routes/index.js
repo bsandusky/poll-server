@@ -1,8 +1,11 @@
 'use strict'
 
 const pollsHandler = require('../handlers/pollsHandler')
+const usersHandler = require('../handlers/usersHandler')
 
 module.exports = [
+
+  // POLLS Routes
   {
     method: 'GET',
     path: '/api/v1/polls',
@@ -30,5 +33,13 @@ module.exports = [
     path: '/api/v1/polls/{id}',
     handler: pollsHandler.remove
     //auth
+  },
+
+  // USERS Routes
+  {
+    method: 'POST',
+    path: '/users/signup',
+    handler: usersHandler.signup
   }
+
 ]

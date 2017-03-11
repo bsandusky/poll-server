@@ -3,7 +3,7 @@ version: '2'
 services:
 
   server:
-    image: bsandusky/poll-server:0.2
+    image: bsandusky/poll-server:0.1
     container_name: server
     environment:
       - MONGO_URI=mongodb://mongodb/polls
