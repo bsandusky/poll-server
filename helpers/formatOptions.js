@@ -6,7 +6,7 @@ module.exports = (options) => {
   let formattedOptions = [];
 
   optionsArray.forEach(function(option) {
-    formattedOptions.push({type: "option", option: option.trim(), count: option.count || 0});
+    formattedOptions.push({type: "option", option: option.trim(), count: 0});
   });
 
   return formattedOptions
