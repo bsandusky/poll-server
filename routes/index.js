@@ -20,7 +20,7 @@ module.exports = [
     //auth
   },
   {
-    method: 'PUT',
+    method: 'PATCH',
     path: '/api/v1/polls/{id}',
     handler: pollsHandler.update
     //auth

@@ -1,11 +1,13 @@
 'use strict'
-
 const Polls = require('../models/polls.js')
+const newPollObject = require('../helpers/newPollObject.js')
+const updatePollObject = require('../helpers/updatePollObject.js')
+const mongoose = require('mongoose')
 
 exports.find = function (req, reply) {
 
   Polls
-    .find({ 'created_by': 12345 })
+    .find()
     .exec()
     .then((results) => {
       reply(results)
@@ -17,61 +19,82 @@ exports.find = function (req, reply) {
 
 exports.findOne = function (req, reply) {
 
-  Polls
-    .findOne({ '_id': '58be13e37aef7a005b619a8d' })
-    .exec()
-    .then((result) => {
-        reply(result)
-    })
-    .catch((err) => {
-        throw err
-    })
+  if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+    Polls
+      .findById(req.params.id)
+      .exec()
+      .then((result) => {
+          reply(result)
+      })
+      .catch((err) => {
+          throw err
+      })
+  } else {
+    reply ({error: "ObjectId provided is invalid. Please supply a valid MongoDB ObjectId to find individual records."})
+  }
 }
 
 exports.add = function (req, reply) {
 
-  let newPollObject = {};
-
-	newPollObject['created_by'] = 12345
-	newPollObject['created_timestamp'] = Date.now()
-	newPollObject['active'] = true
-	newPollObject['poll_stimulus'] = "Poll question here"
-	newPollObject['poll_options'] = [{option: "option one", count: 0}, {option: "option two", count: 0}]
-	let poll = new Polls(newPollObject)
-
-  poll.save()
-    .then((result) => {
-      reply(result)
-    })
-    .catch((err) => {
-      throw err
-    })
+  if (req.payload) {
+    let poll = newPollObject(req.payload)
+    poll.save()
+      .then((result) => {
+        reply(result)
+      })
+      .catch((err) => {
+        throw err
+      })
+  }
 }
 
 exports.update = function (req, reply) {
 
-  Polls.
-    findOneAndUpdate( { '_id': '58be13e37aef7a005b619a8d' },
-                      {$set: {'poll_stimulus': "Another new question here"}},
-                      {new: true})
-    .exec()
-    .then((result) => {
-      reply(result)
-    })
-    .catch((err) => {
-      throw err
-    })
+  if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+
+    if (req.payload.optionId) {
+      Polls.
+        findOneAndUpdate( { '_id': req.params.id, "poll_options._id": req.payload.optionId },
+                          { '$inc': {'poll_options.$.count': 1 } },
+                          { new: true })
+        .exec()
+        .then((result) => {
+          reply(result)
+        })
+        .catch((err) => {
+          throw err
+        })
+    } else {
+      Polls.
+        findOneAndUpdate( { '_id': req.params.id },
+                          { $set: updatePollObject(req.payload) },
+                          { new: true })
+        .exec()
+        .then((result) => {
+          reply(result)
+        })
+        .catch((err) => {
+          throw err
+        })
+    }
+  } else {
+    reply ({error: "ObjectId provided is invalid. Please supply a valid MongoDB ObjectId to find individual records."})
+  }
 }
 
 exports.remove = function (req, reply) {
 
-  Polls.
-    findOneAndRemove({ '_id': '58be13e37aef7a005b619a8d' })
-    .exec()
-    .then((result) => {
-      reply(result)
-    })
-    .catch((err) => {
-      throw err
-    })
+  if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+    Polls.
+      findOneAndRemove({ '_id': req.params.id })
+      .exec()
+      .then((result) => {
+        reply(result)
+      })
+      .catch((err) => {
+        throw err
+      })
+  } else {
+    reply ({error: "ObjectId provided is invalid. Please supply a valid MongoDB ObjectId to find individual records."})
+  }
 }
