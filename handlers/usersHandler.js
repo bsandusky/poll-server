@@ -2,28 +2,8 @@
 const bcrypt = require('bcryptjs')
 const Users = require('../models/users.js')
 const newUserObject = require('../helpers/newUserObject.js')
-
-exports.authenticate = function (req, reply) {
-
-  Users
-    .findOne({'username': req.payload.username })
-    .exec()
-    .then((result) => {
-
-      if (!result) {
-        reply({error: "User not registered"})
-      }
-
-      if (!bcrypt.compareSync(req.payload.password, result.password)) {
-        reply({error: "Incorrect password"})
-      } else {
-        reply({success: "Login successful"})
-      }
-    })
-    .catch((err) => {
-      throw err
-    })
-}
+const updateToken = require('../helpers/updateToken.js')
+const revokeToken = require('../helpers/revokeToken.js')
 
 exports.signup = function (req, reply) {
 
@@ -35,7 +15,50 @@ exports.signup = function (req, reply) {
     })
     //TODO: Change this error messaging
     .catch((err) => {
-      reply({duplicate_record: "User already exists"})
+      reply({ message: "User already exists" })
       // throw err
+    })
+}
+
+exports.login = function (req, reply) {
+
+  Users
+    .findOne({'username': req.payload.username })
+    .exec()
+    .then((result) => {
+
+      if (!result) {
+        reply({ message: "User not registered" })
+      }
+
+      if (!bcrypt.compareSync(req.payload.password, result.password)) {
+        reply({ message: "Incorrect password" })
+      }
+
+      return result
+    })
+    .then(updateToken)
+    .then((result) => {
+      reply({ message: "Login successful", uid: result._id, sid: result.session_token })
+    })
+    .catch((err) => {
+      throw err
+    })
+}
+
+exports.logout = function (req, reply) {
+
+  Users
+    .findById(req.payload.uid)
+    .exec()
+    .then((result) => {
+      return result
+    })
+    .then(revokeToken)
+    .then((result) => {
+      reply({ message: "Logout successful", uid: result._id, sid: result.session_token })
+    })
+    .catch((err) => {
+      throw err
     })
 }
