@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs')
 const Users = require('../models/users.js')
 const newUserObject = require('../helpers/newUserObject.js')
 
-exports.login = function (req, reply) {
+exports.authenticate = function (req, reply) {
+
   Users
     .findOne({'username': req.payload.username })
     .exec()
@@ -13,10 +14,10 @@ exports.login = function (req, reply) {
         reply({error: "User not registered"})
       }
 
-      if (bcrypt.compareSync(req.payload.password, result.password)) {
-        reply({success: "Login successful"})
-      } else {
+      if (!bcrypt.compareSync(req.payload.password, result.password)) {
         reply({error: "Incorrect password"})
+      } else {
+        reply({success: "Login successful"})
       }
     })
     .catch((err) => {
@@ -32,7 +33,9 @@ exports.signup = function (req, reply) {
     .then((user) => {
       reply(user)
     })
+    //TODO: Change this error messaging
     .catch((err) => {
-      throw err
+      reply({duplicate_record: "User already exists"})
+      // throw err
     })
 }

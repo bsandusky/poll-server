@@ -1,6 +1,7 @@
 'use strict'
 const bcrypt = require('bcryptjs')
 const Users = require('../models/users.js')
+// const generateSessionToken = require('../helpers/generateSessionToken.js')
 
 module.exports = (payload) => {
 
@@ -11,6 +12,7 @@ module.exports = (payload) => {
   newUserObject['username'] = payload.username,
   newUserObject['password'] = hash,
   newUserObject['created_timestamp'] = Date.now()
+  // newUserObject['token'] = generateSessionToken()
 
   return new Users(newUserObject)
 }

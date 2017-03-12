@@ -4,10 +4,10 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const User = new Schema({
-  username: String,
-  password: String,
+  username: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
   created_timestamp: Date,
-  salt: String
+  //token: String
 })
 
 module.exports = mongoose.model('User', User)

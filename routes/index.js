@@ -38,14 +38,13 @@ module.exports = [
   // USERS Routes
   {
     method: 'POST',
-    path: '/users/login',
-    handler: usersHandler.login
+    path: '/users/auth',
+    handler: usersHandler.authenticate
   },
   {
     method: 'POST',
     path: '/users/signup',
     handler: usersHandler.signup
   }
-
 
 ]
