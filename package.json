@@ -10,6 +10,7 @@
   "author": "bsandusky",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "hapi": "^16.1.0",
     "mongoose": "^4.8.6"
   },
