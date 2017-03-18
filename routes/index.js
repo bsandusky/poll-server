@@ -2,6 +2,7 @@
 
 const pollsHandler = require('../handlers/pollsHandler')
 const usersHandler = require('../handlers/usersHandler')
+const validateToken = require('../helpers/validateToken.js')
 
 module.exports = [
 
@@ -19,20 +20,32 @@ module.exports = [
   {
     method: 'POST',
     path: '/api/v1/polls',
-    handler: pollsHandler.add
-    //auth
+    handler: pollsHandler.add,
+    config: {
+      pre: [
+        { method: validateToken, assign: "auth" }
+      ]
+    }
   },
   {
     method: 'PATCH',
     path: '/api/v1/polls/{id}',
-    handler: pollsHandler.update
-    //auth
+    handler: pollsHandler.update,
+    config: {
+      pre: [
+        { method: validateToken, assign: "auth" }
+      ]
+    }
   },
   {
     method: 'DELETE',
     path: '/api/v1/polls/{id}',
-    handler: pollsHandler.remove
-    //auth
+    handler: pollsHandler.remove,
+    config: {
+      pre: [
+        { method: validateToken, assign: "auth" }
+      ]
+    }
   },
 
   // USERS Routes

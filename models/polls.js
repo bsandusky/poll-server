@@ -9,7 +9,7 @@ const pollOption = new Schema({
 })
 
 const Poll = new Schema({
-	created_by: Number,
+	created_by: String,
 	created_timestamp: Date,
 	last_updated: Date,
 	active: Boolean,

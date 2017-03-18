@@ -3,12 +3,12 @@
 const Polls = require('../models/polls.js')
 const formatOptions = require('./formatOptions.js')
 
-module.exports = (payload) => {
+module.exports = (payload, uid) => {
 
   let formattedOptions = formatOptions(payload.poll_options)
 
   let newPollObject = {};
-  newPollObject['created_by'] = 0
+  newPollObject['created_by'] = uid
   newPollObject['created_timestamp'] = Date.now()
   newPollObject['last_updated'] = Date.now()
   newPollObject['active'] = true
